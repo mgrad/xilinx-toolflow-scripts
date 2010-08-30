@@ -1,0 +1,19 @@
+require 'rake'
+#require "./lib/read_xmp.rb"
+
+
+task :default do
+	# rake -T
+	# list things
+end
+
+desc "Read main configuration for project"
+task :init do
+	$xmp = Read_xmp.new("udi/system.xmp")
+end
+
+
+task :platgen => [:init] do
+	p $xmp.Device
+end
+

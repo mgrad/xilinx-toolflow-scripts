@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>File: xilmake.rb</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+  <div id="fileHeader">
+    <h1>xilmake.rb</h1>
+    <table class="header-table">
+    <tr class="top-aligned-row">
+      <td><strong>Path:</strong></td>
+      <td>lib/xilmake.rb
+      </td>
+    </tr>
+    <tr class="top-aligned-row">
+      <td><strong>Last Update:</strong></td>
+      <td>Fri Sep 05 15:19:52 +0200 2008</td>
+    </tr>
+    </table>
+  </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+Define a packgate task library to generate Xilinx EDK project
+</p>
+<p>
+<b>Main entries are</b>
+</p>
+<dl>
+<dt><b>:all</b></dt><dd>Create a bitstream which consits of hardware and software together
+
+</dd>
+<dt><b>:run</b></dt><dd>Reprogramm FPGA with bitstream
+
+</dd>
+<dt><b>:gen_hw</b></dt><dd>Generate bitfile with hardware
+
+</dd>
+<dt><b>:gen_sw</b></dt><dd>Generate executable from software
+
+</dd>
+</dl>
+<p>
+<b>Generating HW in details.</b>
+</p>
+<pre>
+ 1. &lt;b&gt;:_read_xmp&lt;/b&gt; Read XMP file
+  Input file: *.xmp
+
+ 2. &lt;b&gt;:_gen_hdl&lt;/b&gt;  Use 'platgen' to generate hdl file
+  Input  file: *.mhs (*.mpd, *.pao)
+  Output file: *.hdl
+
+   Platform Generator (Platgen) compiles the high-level description of your embedded
+   processor system into an HDL netlist that can be implemented in a target FPGA device.
+   - generates top level vhdl file, and connects signals from mhs component busses in that file
+   - invokes xst (to produce ngc for each component but NOT for WHOLE system)
+   - generates BBM (bram memory map) (file with addresses of BRAM memory)
+
+ 3. [&lt;b&gt;:_gen_xst&lt;/b&gt;]  Use 'xst' to synthesize hdl files
+  Input  file: *.hdl
+  Output file: *.ngc
+
+ 4. [&lt;b&gt;:_gen_ngd&lt;/b&gt;] Use 'ngdbuild' to
+  - apply constrain file *.ucf
+  - merge together *.ngc files
+  Input  file: *.ngc, *.ucf
+  Output file: *.ngd
+
+   The NGD file contains a logical description of the design that includes both the hierarchical
+   components used to develop the design and the lower level Xilinx primitives.
+   The NGD file also contains any number of NMC (macro library) files, each of which contains the definition of a physical macro.
+
+ 5. [&lt;b&gt;:_gen_map&lt;/b&gt;] Use 'map' to map logic design to Xilinx fpga resources.
+  Input  file: *.ngd
+  Output file: *.ncd
+
+ 6. [&lt;b&gt;:_gen_par&lt;/b&gt;] Use 'par' to place (placer) components and route (router) wires
+  Input  file: *.ncd *.pcf
+  Output file: *.par
+
+  During placement, PAR places components into sites based on factors such as constraints
+  specified in the PCF file, the length of connections, and the available routing resources.
+
+  After placing the design, PAR executes multiple phases of the router. The router performs
+  a converging procedure for a solution that routes the design to completion and meets
+  timing constraints. Once the design is fully routed, PAR writes an NCD file, which can be
+  analyzed against timing.
+
+ 7. [&lt;b&gt;:_gen_trc&lt;/b&gt;] Use 'trace' to analyze and check timings (statistics)
+  Input  file: *.par
+  Output file: *.trc
+
+ 8. [&lt;b&gt;:_gen_bit&lt;/b&gt; Use 'bitgen' to generate final bitstream
+  Input  file: *
+  Output file: *.bit
+</pre>
+
+    </div>
+
+    <div id="requires-list">
+      <h3 class="section-bar">Required files</h3>
+
+      <div class="name-list">
+      rake&nbsp;&nbsp;
+      rake/tasklib&nbsp;&nbsp;
+      </div>
+    </div>
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>
